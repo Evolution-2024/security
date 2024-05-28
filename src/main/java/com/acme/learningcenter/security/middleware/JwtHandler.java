@@ -22,15 +22,20 @@ public class JwtHandler {
   private int expirationDays;
 
   public String generateToken(Authentication authentication) {
+
     String subject = ((UserDetailsImpl) authentication.getPrincipal()).getUsername();
+
     Date issuedAt = new Date();
+
     Date expiration = DateUtils.addDays(issuedAt, expirationDays);
+
     return Jwts.builder()
       .setSubject(subject)
       .setIssuedAt(issuedAt)
       .setExpiration(expiration)
-      .signWith(SignatureAlgorithm.ES256, secret)
+      .signWith(SignatureAlgorithm.HS256, secret)
       .compact();
+
   }
 
   public String getUsernameFrom(String token) {
