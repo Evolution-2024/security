@@ -66,12 +66,14 @@ public class UserServiceImpl implements UserService {
       String token = handler.generateToken(authentication);
       logger.info("MAPEO A AUTHENTICATE RESOURCE");
       UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
-//      List<String> roles = userDetails.getAuthorities().stream()
-//        .map(GrantedAuthority::getAuthority)
-//        .collect(Collectors.toList());
+
+      List<String> roles = userDetails.getAuthorities().stream()
+        .map(GrantedAuthority::getAuthority)
+        .collect(Collectors.toList());
+
       AuthenticateResource resource = mapper.map(userDetails, AuthenticateResource.class);
       resource.setToken(token);
-//      resource.setRoles(roles);
+      resource.setRoles(roles);
       AuthenticateResponse response = new AuthenticateResponse(resource);
       return ResponseEntity.ok(response.getResource());
     } catch (Exception e) {
