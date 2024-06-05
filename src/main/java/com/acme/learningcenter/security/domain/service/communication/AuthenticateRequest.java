@@ -13,7 +13,7 @@ import javax.validation.constraints.NotNull;
 public class AuthenticateRequest {
 
   @NotNull
-  private String username;
+  private String email;
   @NotNull
   @NotBlank
   private String password;

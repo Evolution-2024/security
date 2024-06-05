@@ -60,7 +60,7 @@ public class UserServiceImpl implements UserService {
   public ResponseEntity<?> authenticate(AuthenticateRequest request) {
     try {
       Authentication authentication = authenticationManager.authenticate(
-        new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword()));
+        new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword()));
       SecurityContextHolder.getContext().setAuthentication(authentication);
       logger.info("GENERANDO EL TOKEN");
       String token = handler.generateToken(authentication);
@@ -129,9 +129,9 @@ public class UserServiceImpl implements UserService {
   }
 
   @Override
-  public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-    User user = userRepository.findByUsername(username)
-      .orElseThrow(() -> new UsernameNotFoundException(String.format("User not found with username: %s", username)));
+  public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+    User user = userRepository.findByEmail(email)
+      .orElseThrow(() -> new UsernameNotFoundException(String.format("User not found with username: %s", email)));
     return UserDetailsImpl.build(user);
   }
 }
