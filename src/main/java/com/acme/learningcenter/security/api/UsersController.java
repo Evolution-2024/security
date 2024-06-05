@@ -5,9 +5,12 @@ import com.acme.learningcenter.security.domain.service.communication.Authenticat
 import com.acme.learningcenter.security.domain.service.communication.RegisterRequest;
 import com.acme.learningcenter.security.mapping.UserMapper;
 import com.acme.learningcenter.security.resource.UserResource;
+import com.acme.learningcenter.shared.exception.ResourceNotFoundException;
+import com.acme.learningcenter.shared.exception.ResourceValidationException;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -25,6 +28,18 @@ public class UsersController {
   public UsersController(UserService userService, UserMapper mapper) {
     this.userService = userService;
     this.mapper = mapper;
+  }
+
+  @GetMapping("/auth/{userId}")
+  public ResponseEntity<?> getById(@PathVariable Long userId) {
+
+    try {
+      UserResource resources = mapper.toResource(userService.getById(userId));
+      return ResponseEntity.ok(resources);
+    } catch (ResourceValidationException | ResourceNotFoundException e) {
+      return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+    }
+
   }
 
   @PostMapping("/auth/sign-in")
