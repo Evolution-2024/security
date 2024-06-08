@@ -32,6 +32,10 @@ public class UserMapper implements Serializable {
     return mapper.map(model, UserResource.class);
   }
 
+  public List<UserResource> modelListToResource(List<User> modelList) {
+    return mapper.mapList(modelList, UserResource.class);
+  }
+
   public Page<UserResource> modelListToPage(List<User> modelList, Pageable pageable) {
     mapper.addConverter(roleToStringConverter);
     return new PageImpl<>(mapper.mapList(modelList, UserResource.class), pageable, modelList.size());

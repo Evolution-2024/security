@@ -16,6 +16,9 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Tag(name = "Users", description = "Create, read, update and delete users")
 @CrossOrigin(origins = "*", maxAge = 3600)
@@ -57,5 +60,21 @@ public class UsersController {
   public ResponseEntity<?> getAllUsers(Pageable pageable) {
     Page<UserResource> resources = mapper.modelListToPage(userService.getAll(), pageable);
     return ResponseEntity.ok(resources);
+  }
+
+  @GetMapping("/auth/all")
+  public ResponseEntity<List<UserResource>> getFilters(
+    @RequestParam(required = false) Long id,
+    @RequestParam(required = false) Long roleId
+  ) {
+    Map<String, Object> parameters = new HashMap<>();
+    parameters.put("id", id);
+    parameters.put("roleId", roleId);
+    try {
+      List<UserResource> list = mapper.modelListToResource(userService.getByFilter(parameters));
+      return ResponseEntity.ok(list);
+    } catch (Exception e) {
+      return ResponseEntity.badRequest().build();
+    }
   }
 }

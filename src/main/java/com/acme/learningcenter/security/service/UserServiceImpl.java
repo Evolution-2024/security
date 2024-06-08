@@ -31,6 +31,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -132,6 +133,14 @@ public class UserServiceImpl implements UserService {
   public User getById(Long id) {
     return userRepository.findById(id)
       .orElseThrow(() -> new UsernameNotFoundException(String.format("User not found with id: %s", id)));
+  }
+
+  @Override
+  public List<User> getByFilter(Map<String, Object> parameters) {
+    Long id = (Long) parameters.get("id");
+    Long roleId = (Long) parameters.get("roleId");
+
+    return userRepository.findByFilter(id,roleId);
   }
 
   @Override
