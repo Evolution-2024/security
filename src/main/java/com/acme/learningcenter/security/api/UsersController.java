@@ -55,14 +55,14 @@ public class UsersController {
     return userService.register(request);
   }
 
-  @GetMapping
-//  @PreAuthorize("hasRole('ADMIN')")
+  /*@GetMapping
+  @PreAuthorize("hasRole('ADMIN')")
   public ResponseEntity<?> getAllUsers(Pageable pageable) {
     Page<UserResource> resources = mapper.modelListToPage(userService.getAll(), pageable);
     return ResponseEntity.ok(resources);
-  }
+  }*/
 
-  @GetMapping("/auth/all")
+  @GetMapping
   public ResponseEntity<List<UserResource>> getFilters(
     @RequestParam(required = false) Long id,
     @RequestParam(required = false) Long roleId
