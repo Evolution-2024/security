@@ -5,6 +5,7 @@ import com.acme.learningcenter.security.domain.service.communication.Authenticat
 import com.acme.learningcenter.security.domain.service.communication.RegisterRequest;
 import com.acme.learningcenter.security.mapping.UserMapper;
 import com.acme.learningcenter.security.resource.UserResource;
+import com.acme.learningcenter.shared.domain.service.communication.BaseResponse;
 import com.acme.learningcenter.shared.exception.ResourceNotFoundException;
 import com.acme.learningcenter.shared.exception.ResourceValidationException;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -63,18 +64,22 @@ public class UsersController {
   }*/
 
   @GetMapping
-  public ResponseEntity<List<UserResource>> getFilters(
+  public ResponseEntity<BaseResponse<List<UserResource>>> getFilters(
     @RequestParam(required = false) Long id,
     @RequestParam(required = false) Long roleId
   ) {
     Map<String, Object> parameters = new HashMap<>();
     parameters.put("id", id);
     parameters.put("roleId", roleId);
+
+    BaseResponse<List<UserResource>> response = null;
     try {
       List<UserResource> list = mapper.modelListToResource(userService.getByFilter(parameters));
-      return ResponseEntity.ok(list);
+      response = new BaseResponse<>(list);
+      return new ResponseEntity<>(response, HttpStatus.OK);
     } catch (Exception e) {
-      return ResponseEntity.badRequest().build();
+      response = new BaseResponse<>(e.getMessage());
+      return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
   }
 }
